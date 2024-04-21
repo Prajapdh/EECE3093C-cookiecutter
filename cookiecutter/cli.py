@@ -95,13 +95,13 @@ def list_installed_templates(
 #         )
 #     ]
 
-def autocomplete_template(ctx, args, incomplete):
+def autocomplete_template(default_config: bool | dict[str, Any], passed_config_file: str | None, incomplete: str | None) -> list[str]:
     """
     Autocomplete function for template names based on locally installed templates.
     """
-    config = get_user_config(ctx.params.get('config_file'), ctx.params.get('default_config'))
+    config = get_user_config(passed_config_file, default_config)
     cookiecutter_folder = config['cookiecutters_dir']
-
+    click.echo(f' passed_config_file: {passed_config_file}, default_config: {default_config}')
     if not os.path.exists(cookiecutter_folder):
         return []
 
@@ -113,13 +113,15 @@ def autocomplete_template(ctx, args, incomplete):
         )
     ]
     
-    return [t for t in templates if incomplete in t]
+    # return [t for t in templates if incomplete in t]
+    return templates
 
 
 @click.command(context_settings={"help_option_names": ['-h', '--help']})
 @click.version_option(__version__, '-V', '--version', message=version_msg())
 @click.argument('template', required=False)
-@click.option('--completion', type=str, autocompletion=autocomplete_template)
+# @click.option('--completion', type=str, autocompletion=autocomplete_template)
+@click.option('--completion', '-c', is_flag=True, help='Enable auto completion')
 @click.argument('extra_context', nargs=-1, callback=validate_extra_context)
 @click.option(
     '--no-input',
@@ -219,6 +221,7 @@ def main(
     replay_file: str | None,
     list_installed: bool,
     keep_project_on_failure: bool,
+    completion: bool,
 ) -> None:
     """Create a project from a Cookiecutter project template (TEMPLATE).
 
@@ -236,6 +239,16 @@ def main(
         click.echo(click.get_current_context().get_help())
         sys.exit(0)
 
+    if completion:
+        # Get the last word in the command line as the incomplete word
+        incomplete = template if template else ''
+        # Call the autocomplete_template function
+        completions = autocomplete_template(default_config, config_file, incomplete)
+        # Print the completions
+        for completion in completions:
+            click.echo(f' * {completion}')
+        sys.exit(0)
+    
     configure_logger(stream_level='DEBUG' if verbose else 'INFO', debug_file=debug_file)
 
     # If needed, prompt the user to ask whether or not they want to execute
