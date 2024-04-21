@@ -83,9 +83,43 @@ def list_installed_templates(
         click.echo(f' * {name}')
 
 
+# def autocomplete_installed_templates(prefix: str | None, default_config: bool | dict[str, Any], passed_config_file: str | None
+# ) -> None:
+#     config = get_user_config(passed_config_file, default_config)
+#     cookiecutter_folder: str = config['cookiecutters_dir']
+#     template_names = [
+#         folder
+#         for folder in os.listdir(cookiecutter_folder)
+#         if os.path.exists(
+#             os.path.join(cookiecutter_folder, folder, 'cookiecutter.json')
+#         )
+#     ]
+
+def autocomplete_template(ctx, args, incomplete):
+    """
+    Autocomplete function for template names based on locally installed templates.
+    """
+    config = get_user_config(ctx.params.get('config_file'), ctx.params.get('default_config'))
+    cookiecutter_folder = config['cookiecutters_dir']
+
+    if not os.path.exists(cookiecutter_folder):
+        return []
+
+    templates = [
+        folder
+        for folder in os.listdir(cookiecutter_folder)
+        if os.path.exists(
+            os.path.join(cookiecutter_folder, folder, 'cookiecutter.json')
+        )
+    ]
+    
+    return [t for t in templates if incomplete in t]
+
+
 @click.command(context_settings={"help_option_names": ['-h', '--help']})
 @click.version_option(__version__, '-V', '--version', message=version_msg())
 @click.argument('template', required=False)
+@click.option('--completion', type=str, autocompletion=autocomplete_template)
 @click.argument('extra_context', nargs=-1, callback=validate_extra_context)
 @click.option(
     '--no-input',
