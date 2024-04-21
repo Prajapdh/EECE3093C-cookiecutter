@@ -119,9 +119,9 @@ def autocomplete_template(default_config: bool | dict[str, Any], passed_config_f
 @click.command(context_settings={"help_option_names": ['-h', '--help']})
 @click.version_option(__version__, '-V', '--version', message=version_msg())
 @click.argument('template', required=False)
-# @click.option('--completion', type=str, autocompletion=autocomplete_template)
-@click.option('--completion', '-c', is_flag=True, help='Enable auto completion')
 @click.argument('extra_context', nargs=-1, callback=validate_extra_context)
+# @click.option('--completion', type=str, autocompletion=autocomplete_template)
+@click.option('--completion', is_flag=True, help='Enable auto completion')
 @click.option(
     '--no-input',
     is_flag=True,
@@ -228,6 +228,19 @@ def main(
     volunteers. If you would like to help out or fund the project, please get
     in touch at https://github.com/cookiecutter/cookiecutter.
     """
+    # click.echo(f'template: {template}\n')
+    # click.echo(f'completion: {completion}\n')
+    
+    if completion:
+        # Get the last word in the command line as the incomplete word
+        incomplete = template if template else ''
+        # Call the autocomplete_template function
+        completions = autocomplete_template(default_config, config_file, incomplete)
+        # Print the completions
+        for completion in completions:
+            print(f' * {completion}\n')
+        sys.exit(0)
+
     # Commands that should work without arguments
     if list_installed:
         list_installed_templates(default_config, config_file)
@@ -236,16 +249,6 @@ def main(
     # Raising usage, after all commands that should work without args.
     if not template or template.lower() == 'help':
         click.echo(click.get_current_context().get_help())
-        sys.exit(0)
-
-    if completion:
-        # Get the last word in the command line as the incomplete word
-        incomplete = template if template else ''
-        # Call the autocomplete_template function
-        completions = autocomplete_template(default_config, config_file, incomplete)
-        # Print the completions
-        for completion in completions:
-            click.echo(f' * {completion}')
         sys.exit(0)
     
     configure_logger(stream_level='DEBUG' if verbose else 'INFO', debug_file=debug_file)

@@ -34,9 +34,11 @@ _cookiecutter_completion()
 {
     local word=${COMP_WORDS[COMP_CWORD]}
     local prev_word=${COMP_WORDS[COMP_CWORD-1]}
-    if [[ $prev_word == '-c' ]] || [[ $prev_word == '--completion' ]]; then
-        local completions=$(cookiecutter --completion "$word")
-        COMPREPLY=( $(compgen -W "$completions" -- "$word") )
-    fi
+    # if [[ $prev_word == '-c' ]] || [[ $prev_word == '--completion' ]]; then
+    #     local completions=$(cookiecutter --completion "$word")
+    #     COMPREPLY=( $(compgen -W "$completions" -- "$word") )
+    # fi
+    local completions=$(cookiecutter --completion "$word")
+    COMPREPLY=( $(compgen -W "$completions" -- "$word") )
 }
 complete -F _cookiecutter_completion -o default cookiecutter;
