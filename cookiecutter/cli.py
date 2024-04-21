@@ -113,8 +113,7 @@ def autocomplete_template(default_config: bool | dict[str, Any], passed_config_f
         )
     ]
     
-    # return [t for t in templates if incomplete in t]
-    return templates
+    return [t for t in templates if incomplete in t]
 
 
 @click.command(context_settings={"help_option_names": ['-h', '--help']})

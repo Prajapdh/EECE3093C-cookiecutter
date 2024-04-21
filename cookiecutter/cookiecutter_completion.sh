@@ -21,10 +21,22 @@
 # }
 # complete -F _cookiecutter_completions cookiecutter
 
+# _cookiecutter_completion()
+# {
+#     local word=${COMP_WORDS[COMP_CWORD]}
+#     local completions=$(cookiecutter --completion "$word")
+#     # echo "All completions: $completions"
+#     COMPREPLY=( $(compgen -W "$completions" -- "$word") )
+# }
+# complete -F _cookiecutter_completion -o default cookiecutter;
+
 _cookiecutter_completion()
 {
     local word=${COMP_WORDS[COMP_CWORD]}
-    local completions=$(cookiecutter --completion "$word")
-    COMPREPLY=( $(compgen -W "$completions" -- "$word") )
+    local prev_word=${COMP_WORDS[COMP_CWORD-1]}
+    if [[ $prev_word == '-c' ]] || [[ $prev_word == '--completion' ]]; then
+        local completions=$(cookiecutter --completion "$word")
+        COMPREPLY=( $(compgen -W "$completions" -- "$word") )
+    fi
 }
 complete -F _cookiecutter_completion -o default cookiecutter;
