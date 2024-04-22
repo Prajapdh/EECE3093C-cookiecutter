@@ -10,6 +10,7 @@ from click.testing import CliRunner
 
 from cookiecutter import utils
 from cookiecutter.__main__ import main
+from cookiecutter.cli import autocomplete_template
 from cookiecutter.environment import StrictEnvironment
 from cookiecutter.exceptions import UnknownExtension
 from cookiecutter.main import cookiecutter
@@ -598,6 +599,33 @@ def test_debug_list_installed_templates(
 
     assert "1 installed templates:" in result.output
     assert result.exit_code == 0
+
+
+def test_completion_flag(cli_runner) -> None:
+    """Test cli invocation with `--completion` flag."""
+    result = cli_runner('--completion', 'fake')
+    assert "passed_config_file: None, default_config: False\n" in result.output
+    assert result.exit_code == 0
+
+
+@pytest.mark.usefixtures('make_fake_project_dir', 'remove_fake_project_dir')
+def test_autocomplete_templates_with_existing_directory(user_config_path) -> None:
+    """Verify autocomplete function returns correct template names."""
+    fake_template_dir = os.path.dirname(os.path.abspath('fake-project'))
+    os.makedirs(os.path.dirname(user_config_path))
+    # Single quotes in YAML will not parse escape codes (\).
+    Path(user_config_path).write_text(f"cookiecutters_dir: '{fake_template_dir}'")
+    Path("fake-project", "cookiecutter.json").write_text('{}')
+    result = autocomplete_template(None, user_config_path, "fake")
+    assert "fake-project" in result
+
+
+def test_autocomplete_templates_with_nonexistent_directory(user_config_path) -> None:
+    '''Verify autocomplete function returns an empty list when the directory does not exist.'''
+    os.makedirs(os.path.dirname(user_config_path))
+    Path(user_config_path).write_text('cookiecutters_dir: "/notarealplace/"')
+    result = autocomplete_template(None, user_config_path, "fake")
+    assert result == []
 
 
 def test_debug_list_installed_templates_failure(
