@@ -83,19 +83,6 @@ def list_installed_templates(
         click.echo(f' * {name}')
 
 
-# def autocomplete_installed_templates(prefix: str | None, default_config: bool | dict[str, Any], passed_config_file: str | None
-# ) -> None:
-#     config = get_user_config(passed_config_file, default_config)
-#     cookiecutter_folder: str = config['cookiecutters_dir']
-#     template_names = [
-#         folder
-#         for folder in os.listdir(cookiecutter_folder)
-#         if os.path.exists(
-#             os.path.join(cookiecutter_folder, folder, 'cookiecutter.json')
-#         )
-#     ]
-
-
 def autocomplete_template(
     default_config: bool | dict[str, Any],
     passed_config_file: str | None,
@@ -119,7 +106,6 @@ def autocomplete_template(
             os.path.join(cookiecutter_folder, folder, 'cookiecutter.json')
         )
     ]
-
     return [t for t in templates if incomplete in t]
 
 
@@ -244,8 +230,8 @@ def main(
         # Call the autocomplete_template function
         completions = autocomplete_template(default_config, config_file, incomplete)
         # Print the completions
-        for completion in completions:
-            print(f' * {completion}\n')
+        for c in completions:
+            click.echo(f'Completions: {c}')
         sys.exit(0)
 
     # Commands that should work without arguments

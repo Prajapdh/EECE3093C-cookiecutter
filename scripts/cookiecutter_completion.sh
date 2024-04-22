@@ -1,5 +1,5 @@
-# This script defines a bash function _cookiecutter_completion that will be called 
-# when the user presses <TAB>. This function calls the cookiecutter command with a 
+# This script defines a bash function _cookiecutter_completion that will be called
+# when the user presses <TAB>. This function calls the cookiecutter command with a
 # special environment variable _COOKIECUTTER_COMPLETE=complete, which triggers the autocompletion feature in click.
 
 # DIDN'T GIVE ERROR
