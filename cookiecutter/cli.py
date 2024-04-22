@@ -95,13 +95,20 @@ def list_installed_templates(
 #         )
 #     ]
 
-def autocomplete_template(default_config: bool | dict[str, Any], passed_config_file: str | None, incomplete: str | None) -> list[str]:
+
+def autocomplete_template(
+    default_config: bool | dict[str, Any],
+    passed_config_file: str | None,
+    incomplete: str | None,
+) -> list[str]:
     """
     Autocomplete function for template names based on locally installed templates.
     """
     config = get_user_config(passed_config_file, default_config)
     cookiecutter_folder = config['cookiecutters_dir']
-    click.echo(f' passed_config_file: {passed_config_file}, default_config: {default_config}')
+    click.echo(
+        f' passed_config_file: {passed_config_file}, default_config: {default_config}'
+    )
     if not os.path.exists(cookiecutter_folder):
         return []
 
@@ -112,7 +119,7 @@ def autocomplete_template(default_config: bool | dict[str, Any], passed_config_f
             os.path.join(cookiecutter_folder, folder, 'cookiecutter.json')
         )
     ]
-    
+
     return [t for t in templates if incomplete in t]
 
 
@@ -230,7 +237,7 @@ def main(
     """
     # click.echo(f'template: {template}\n')
     # click.echo(f'completion: {completion}\n')
-    
+
     if completion:
         # Get the last word in the command line as the incomplete word
         incomplete = template if template else ''
@@ -250,7 +257,7 @@ def main(
     if not template or template.lower() == 'help':
         click.echo(click.get_current_context().get_help())
         sys.exit(0)
-    
+
     configure_logger(stream_level='DEBUG' if verbose else 'INFO', debug_file=debug_file)
 
     # If needed, prompt the user to ask whether or not they want to execute
