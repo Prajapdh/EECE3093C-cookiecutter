@@ -42,6 +42,7 @@ def cookiecutter(
     accept_hooks: bool = True,
     keep_project_on_failure: bool = False,
 ) -> str:
+
     """
     Run Cookiecutter just as if using it from the command line.
 
