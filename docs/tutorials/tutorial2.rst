@@ -4,7 +4,8 @@
 Create a Cookiecutter From Scratch
 ==================================
 
-In this tutorial, we are creating `cookiecutter-website-simple`, a cookiecutter for generating simple, bare-bones websites.
+In this tutorial, we will walk through the process of creating a Cookiecutter template named cookiecutter-website-simple. This template will be used to generate simple, bare-bones websites.
+
 
 Step 1: Name Your Cookiecutter
 ------------------------------
@@ -33,14 +34,14 @@ Step 2: Create cookiecutter.json
 Step 3: Create project_slug Directory
 ---------------------------------------
 
-Create a directory called `{{ cookiecutter.project_slug }}`.
+Create a directory called `{{ cookiecutter.repo_name }}`.
 
-This value will be replaced with the repo name of projects that you generate from this cookiecutter.
+This value will be replaced with the repository name of projects generated from this Cookiecutter template. Note: If you are using this template to create a GitHub repository, the repository name will typically match the repo_name. However, if you are not using this template specifically for GitHub, or if you want to customize the repository name separately, you can replace repo_name with your desired repository name.
 
 Step 4: Create index.html
 --------------------------
 
-Inside of `{{ cookiecutter.project_slug }}`, create `index.html` with following content:
+Inside of `{{ cookiecutter.repo_name }}`, create `index.html` with following content:
 
 .. code-block:: html
 
