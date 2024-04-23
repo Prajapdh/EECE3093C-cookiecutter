@@ -37,6 +37,7 @@ Step 3: Create project_slug Directory
 Create a directory called `{{ cookiecutter.repo_name }}`.
 
 This value will be replaced with the repository name of projects generated from this Cookiecutter template. Note: If you are using this template to create a GitHub repository, the repository name will typically match the repo_name. However, if you are not using this template specifically for GitHub, or if you want to customize the repository name separately, you can replace repo_name with your desired repository name.
+Some templates have a prompt for "project_slug", "project_name", "repo_name", or a combination of these. Note: All these essentially expect the same repository name. The prompts asked to you are only a reflection of how individual templates were set up.
 
 Step 4: Create index.html
 --------------------------
